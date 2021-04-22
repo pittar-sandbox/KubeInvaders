@@ -122,6 +122,8 @@ sed -i '' "s/kubeinvaders_route_host/$ROUTE_HOST/g" openshift/kustomize/kubeinva
 sed -i '' "s/kubeinvaders_route_host/$ROUTE_HOST/g" openshift/kustomize/kubeinvaders-dc.yaml
 
 sed -i '' "s/target_namespaces/$TARGET_NAMESPACES/g" openshift/kustomize/kubeinvaders-route.yaml
+
+oc apply -k openshift/kustomize
 ```
 
 ### Install KubeInvaders on OpenShift (with Templates)
