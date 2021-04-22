@@ -109,7 +109,22 @@ In order to restrict the access to the Kubeinvaders endpoint add this annotation
 nginx.ingress.kubernetes.io/whitelist-source-range: <your_ip>/32
 ```
 
-### Install KubeInvaders on OpenShift
+### Install KubeInvaders on OpenShift (with Kustomize)
+
+Using a recent version of the `oc` or `kubectl` command line tool, run the following commands logged in as a `cluster-admin` user.
+
+```bash
+export TARGET_NAMESPACES=target-namespace
+export ROUTE_HOST=kubeinvaders.apps.mycluster.com
+
+sed -i '' "s/kubeinvaders_route_host/$ROUTE_HOST/g" openshift/kustomize/kubeinvaders-route.yaml
+
+sed -i '' "s/kubeinvaders_route_host/$ROUTE_HOST/g" openshift/kustomize/kubeinvaders-dc.yaml
+
+sed -i '' "s/target_namespaces/$TARGET_NAMESPACES/g" openshift/kustomize/kubeinvaders-route.yaml
+```
+
+### Install KubeInvaders on OpenShift (with Templates)
 
 To Install KubeInvaders on your OpenShift Cluster clone this repo and launch the following commands:
 
