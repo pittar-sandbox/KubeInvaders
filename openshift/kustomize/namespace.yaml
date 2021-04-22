@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/description: KubeInvaders
+    openshift.io/display-name: KubeInvaders
+  name: kubeinvaders

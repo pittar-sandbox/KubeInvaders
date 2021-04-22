@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: kubeinvaders
+  name: kubeinvaders
+spec:
+  ports:
+  - name: kubeinvaders
+    port: 8080
+  selector:
+    name: kubeinvaders

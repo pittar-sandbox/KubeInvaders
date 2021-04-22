@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kubeinvaders
+
+resources:
+  - namespace.yaml
+  - kubeinvaders-sa.yaml
+  - kubeinvaders-dc.yaml
+  - kubeinvaders-role-clusterrole.yaml
+  - kubeinvaders-role-clusterrolebinding.yaml
+  - kubeinvaders-route.yaml
+  - kubeinvaders-svc.yaml

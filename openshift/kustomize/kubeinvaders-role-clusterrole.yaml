@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kubeinvaders-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - watch
+  - get
+  - delete
+  - list
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - watch
+  - get
+  - delete
+  - list
