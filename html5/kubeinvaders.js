@@ -70,6 +70,7 @@ var aliensIncrementY = 50;
 
 var shuffle = true;
 var help = false;
+var chaos_nodes = true;
 
 function contains(a, obj) {
     for (var i = 0; i < a.length; i++) {
@@ -122,7 +123,7 @@ function deletePods(pod_name){
 function getPods(){
     var oReq = new XMLHttpRequest();
     oReq.onload = function () {
-        json_parsed = JSON.parse(this.responseText)
+        json_parsed = JSON.parse(this.responseText);
         if (nodes && nodes.length > 0){
             pods = json_parsed["items"].concat(nodes);
         } else {
@@ -134,13 +135,18 @@ function getPods(){
 }
 
 function getNodes(){
-    var oReq = new XMLHttpRequest();
-    oReq.onload = function () {
-        json_parsed = JSON.parse(this.responseText)
-        nodes = json_parsed["items"];
-    };;
-    oReq.open("GET", "https://ENDPOINT_PLACEHOLDER/kube/nodes");
-    oReq.send();
+    if (chaos_nodes) {
+        var oReq = new XMLHttpRequest();
+        oReq.onload = function () {
+            json_parsed = JSON.parse(this.responseText);
+            nodes = json_parsed["items"];
+        };;
+        oReq.open("GET", "https://ENDPOINT_PLACEHOLDER/kube/nodes");
+        oReq.send();
+    }
+    else {
+        nodes = []
+    }
 }
 
 window.setInterval(function getKubeItems() { 
@@ -200,14 +206,19 @@ function keyDownHandler(e) {
         pods = [];
     }
     else if(e.keyCode == 72) {
-        //console.log("Help");
         if (help) {
             help = false;
-            //console.log("Deactivate help");
         }
         else {
             help = true
-            //console.log("Activate help");
+        }
+    }
+    else if(e.keyCode == 67) {
+        if (chaos_nodes) {
+            chaos_nodes = false;
+        }
+        else {
+            chaos_nodes = true
         }
     }
 }
@@ -379,6 +390,7 @@ window.setInterval(function draw() {
         ctx.fillText('h => Activate or deactivate Help', 10, 320);
         ctx.fillText('s => Activate or deactivate shuffle for aliens', 10, 340);
         ctx.fillText('n => Change namespace', 10, 360);
+        ctx.fillText('c =>  Activate or deactivate chaos engineering against nodes', 10, 380);
     }
 }, 10)
 

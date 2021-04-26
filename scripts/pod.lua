@@ -37,15 +37,6 @@ if action == "delete" then
     ngx.log(ngx.ERR, errredis)
   end
   -- Count the total of deleted pods
-  local res, err = red:get("deleted_pods_total")
-
-  if res == ngx.null then
-    ngx.say(err)
-    red:set("deleted_pods_total", 1)
-  else
-      incr = res + 1
-      red:set("deleted_pods_total", incr)
-  end
 
   -- Count the total of deleted pods for namespace
   local res, err = red:get("deleted_pods_total_on_" .. namespace)

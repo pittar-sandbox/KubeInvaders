@@ -1,11 +1,13 @@
-loadfile("/tmp/metrics.lua")
+loadfile("/usr/local/openresty/nginx/conf/kubeinvaders/metrics.lua")
 
 local https = require "ssl.https"
 local ltn12 = require "ltn12"
-local json = require 'lunajson'
+local json = require "lunajson"
 local redis = require "resty.redis"
 local arg = ngx.req.get_uri_args()
 local incr = 0
+local config = require "config_kubeinv"
+local chaos_container = ""
 
 function read_all(file)
     local f = assert(io.open(file, "rb"))
@@ -75,6 +77,17 @@ headers = {
   ["Authorization"] = "Bearer " .. token,
 }
 
+local res, err = red:get("chaos_container")
+  
+if res == ngx.null then
+  ngx.log(ngx.ERR, "Found chaos_container defined in Redis!")
+  ngx.log(ngx.ERR, res)
+  chaos_container = res
+else
+  ngx.log(ngx.ERR, "Using default chaos container")
+  chaos_container = config["default_chaos_container"]
+end
+
 body = [[
 {
   "apiVersion": "batch/v1",
@@ -95,30 +108,8 @@ body = [[
         }
       },
       "spec": {
-        "containers": [
-          {
-            "name": "kubeinvaders-chaos-node",
-            "image": "docker.io/luckysideburn/kubeinvaders-stress-ng:latest",
-            "command": [
-              "stress-ng",
-              "--cpu",
-              "4",
-              "--io",
-              "2",
-              "--vm",
-              "1",
-              "--vm-bytes",
-              "1G",
-              "--timeout",
-              "10s",
-              "--metrics-brief"
-            ]
-          }
-        ],
-        "restartPolicy": "Never",
-        "nodeSelector": {
-          "kubernetes.io/hostname": "wrk5-oc"
-        }
+        "containers": [ ]] .. chaos_container .. [[ ],
+        "restartPolicy": "Never"
       }
     },
     "backoffLimit": null
